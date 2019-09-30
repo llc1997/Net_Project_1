@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "main_child.h": "c",
+        "stdlib.h": "c",
+        "get_interface.h": "c",
+        "ip_pthread.h": "c",
+        "ip_link.h": "c",
+        "key_pthread.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
+}
