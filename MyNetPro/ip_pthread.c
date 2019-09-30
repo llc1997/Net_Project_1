@@ -161,7 +161,7 @@ int fun_data_send(int interface,RECV_DATA* recv,ARP_LINK* arp_link)
 
 void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 {
-    	//printf("IP数据包处理函数\n");
+    	printf("IP数据包处理函数\n");
 	unsigned char recv_ip[5];	//提取目的IP
 	memcpy(recv_ip, ((RECV_DATA *)recv)->data+30, 4);
 	recv_ip[4]='\0';

@@ -38,7 +38,8 @@ int main_child(){
 			perror("recvfrom");
 			continue;
 		}
-		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)){//ARP协议应答包
+		//ARP请求包未做处理
+		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[20]==0x02)){//ARP协议应答包
 			ARP_LINK *p = (ARP_LINK *)malloc(sizeof(ARP_LINK));//arp_link链表声明定义，申请一个节点的空间
 			if(p==NULL){
 				perror("malloc");
@@ -54,7 +55,7 @@ int main_child(){
 		}
 		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x00)){//IP协议包
 			//目的ip过滤
-			IP_LINK *ip_pb = find_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
+			IP_LINK *ip_pb = find_iplink_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
 // **********函数：find_ip************************
 			if(ip_pb!=NULL){
 				continue;
