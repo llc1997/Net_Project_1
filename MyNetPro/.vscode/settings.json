@@ -5,7 +5,8 @@
         "get_interface.h": "c",
         "ip_pthread.h": "c",
         "ip_link.h": "c",
-        "key_pthread.h": "c"
+        "key_pthread.h": "c",
+        "IP_LINK.C": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
