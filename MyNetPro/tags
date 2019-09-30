@@ -1,0 +1,34 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CC	Makefile	/^CC = gcc$/;"	m
+FLAGS	Makefile	/^FLAGS = -Wall$/;"	m
+GET_INTERFACE_H	get_interface.h	2;"	d
+INTERFACE	get_interface.h	/^}INTERFACE;$/;"	t	typeref:struct:interface
+MAIN_CHILD_H	main_child.h	2;"	d
+MAXINTERFACES	get_interface.h	4;"	d
+br_ip	get_interface.h	/^	unsigned char br_ip[4];		\/\/广播地址$/;"	m	struct:interface	access:public
+flag	get_interface.h	/^	int  flag;			\/\/状态$/;"	m	struct:interface	access:public
+get_interface_num	get_interface.c	/^int get_interface_num(){$/;"	f
+get_interface_num	get_interface.h	/^int get_interface_num();$/;"	p	signature:()
+getinterface	get_interface.c	/^void getinterface(){$/;"	f
+getinterface	get_interface.h	/^extern void getinterface();$/;"	p	signature:()
+interface	get_interface.h	/^typedef struct interface{$/;"	s
+interface::br_ip	get_interface.h	/^	unsigned char br_ip[4];		\/\/广播地址$/;"	m	struct:interface	access:public
+interface::flag	get_interface.h	/^	int  flag;			\/\/状态$/;"	m	struct:interface	access:public
+interface::ip	get_interface.h	/^	unsigned char ip[4];		\/\/IP地址$/;"	m	struct:interface	access:public
+interface::mac	get_interface.h	/^	unsigned char mac[6];		\/\/MAC地址$/;"	m	struct:interface	access:public
+interface::name	get_interface.h	/^	char name[20];		\/\/接口名字$/;"	m	struct:interface	access:public
+interface::netmask	get_interface.h	/^	unsigned char netmask[4];	\/\/子网掩码$/;"	m	struct:interface	access:public
+interface_num	get_interface.c	/^int interface_num=0;\/\/接口数量$/;"	v
+ip	get_interface.h	/^	unsigned char ip[4];		\/\/IP地址$/;"	m	struct:interface	access:public
+mac	get_interface.h	/^	unsigned char mac[6];		\/\/MAC地址$/;"	m	struct:interface	access:public
+main	main.c	/^int main(int argc, char *argv[])$/;"	f	signature:(int argc, char *argv[])
+main_child	main_child.c	/^int main_child(){$/;"	f
+main_child	main_child.h	/^int main_child();$/;"	p	signature:()
+name	get_interface.h	/^	char name[20];		\/\/接口名字$/;"	m	struct:interface	access:public
+net_interface	get_interface.c	/^INTERFACE net_interface[MAXINTERFACES];\/\/接口数据$/;"	v
+netmask	get_interface.h	/^	unsigned char netmask[4];	\/\/子网掩码$/;"	m	struct:interface	access:public
