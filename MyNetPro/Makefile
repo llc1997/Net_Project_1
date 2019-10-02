@@ -6,6 +6,7 @@ OBJ += ip_link.o
 OBJ += key_pthread.o
 OBJ += get_interface.o
 OBJ += main_child.o
+OBJ += route_link.o
 
 FLAGS = -Wall
 CC = gcc

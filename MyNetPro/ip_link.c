@@ -23,6 +23,8 @@ IP_LINK *ip_head=NULL;		//过滤链表头节点
 
 IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew);
 char *read_src_file(long unsigned int *file_length,char *src_file_name);
+int conf_deal(char *conf_src,char *conf_done[],char *str);
+IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip);
 
 //ip初始化函数（主控）
 void init_ip_link(void)
@@ -32,21 +34,23 @@ void init_ip_link(void)
 	char *conf_buf=NULL;			//保存读取后文件内容的地址
 	char *conf_line[100];			//保存每一行的地址，大小？********
 	IP_LINK *ip_new;				//节点指针	
-	int i,j,k;						//循环控制变量
-	char *str_temp;					//临时指针变量
+	int k;						//循环控制变量
+	//char *str_temp;					//临时指针变量
 	//打开并读取配置文件
 	conf_buf = read_src_file(&file_length,"config/filter_conf");
 	//切割文件内容，切割一行为单位
 	conf_len = conf_deal(conf_buf,conf_line,"\r\n");
 	//循环处理每一行
+	//printf("conf_len=%d\n",conf_len);
 	for(k=0;k<conf_len;k++)
 	{
-		str_temp = conf_line[k];
-		i=0; j=0;
+		//str_temp = conf_line[k];
+		//i=0; j=0;
 		char *conf_row[4] = {NULL,NULL,NULL,NULL};
 		//切割列，“,+”为单位
 		conf_deal(conf_buf,conf_line,",+");
 		ip_new = (IP_LINK *)malloc(sizeof(IP_LINK));
+		bzero(ip_new,sizeof(IP_LINK));
 		//对每一列的内容保存入链表节点ip_new
 		if(conf_row[0] != NULL)
 			memcpy(ip_new->f_dest_ip,conf_row[0],4);
@@ -55,7 +59,7 @@ void init_ip_link(void)
 		if(conf_row[1] != NULL)
 			memcpy(ip_new->f_src_ip,conf_row[1],4);
 		if(conf_row[2] != NULL)
-			memcpy(ip_new->f_port,conf_row[2],2);
+			memcpy((char *)&(ip_new->f_port),conf_row[2],2);
 		if(conf_row[3] != NULL)
 			memcpy(ip_new->f_agree,conf_row[3],strlen(conf_row[3]));
 		//插入链表
@@ -158,11 +162,11 @@ IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip)
 	if(ip_find == NULL)
 		return NULL;
 	while(ip_find->next != ip_head){
-		if(strncmp(ip_find->f_dest_ip,recv_ip,4) == 0)
+		if(strncmp((char *)ip_find->f_dest_ip,(char *)recv_ip,4) == 0)
 			return ip_find;
 		ip_find = ip_find->next;		
 	}	
-	if(strncmp(ip_find->f_dest_ip,recv_ip,4) == 0)
+	if(strncmp((char *)ip_find->f_dest_ip,(char *)recv_ip,4) == 0)
 		return ip_find;	
 	else
 		return ip_find;

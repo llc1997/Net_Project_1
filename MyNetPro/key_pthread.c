@@ -1,4 +1,31 @@
 #include "key_pthread.h"
+#include <stdio.h>
+
+
+//函数功能:无回显输入字符
+char mygetch()
+{
+	struct termios oldt, newt;
+	char ch;
+	tcgetattr( STDIN_FILENO, &oldt );
+	newt = oldt;
+	newt.c_lflag &= ~( ICANON | ECHO );
+	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
+	ch = getchar();
+	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+	return ch;
+}
+
+//打印帮助提示信息
+void help(void)
+{
+    printf("========================\n");
+    printf("== 1、setip ============\n");
+    printf("========================\n");
+    printf("========================\n");
+    printf("========================\n");
+    printf("========================\n");
+}
 
 void *key_pthread(void *arg)
 {
@@ -17,28 +44,7 @@ void *key_pthread(void *arg)
     }
 }
 
-//打印帮助提示信息
-void help(void)
-{
-    printf("========================\n");
-    printf("== 1、setip ============\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
-}
 
-//函数功能:无回显输入字符
-char mygetch()
-{
-	struct termios oldt, newt;
-	char ch;
-	tcgetattr( STDIN_FILENO, &oldt );
-	newt = oldt;
-	newt.c_lflag &= ~( ICANON | ECHO );
-	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-	ch = getchar();
-	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-	return ch;
-}
+
+
 

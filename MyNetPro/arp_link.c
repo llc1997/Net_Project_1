@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 typedef struct arp_link
 {
@@ -62,11 +64,11 @@ ARP_LINK* arp_link_seek(ARP_LINK *arp_head, unsigned char *recv_ip)
 		return NULL;
 	while(arp_find->next != arp_head)	//未到尾节点
 	{
-		if(strncmp(arp_find->arp_ip,recv_ip,4) == 0)
+		if(strncmp((char *)arp_find->arp_ip,(char *)recv_ip,4) == 0)
 			return arp_find;
 		arp_find = arp_find->next;
 	}
-	if(strncmp(arp_find->arp_ip,recv_ip,4) == 0)
+	if(strncmp((char *)arp_find->arp_ip,(char *)recv_ip,4) == 0)
 		return arp_find; 
 	else
 		return NULL;

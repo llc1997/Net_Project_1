@@ -29,5 +29,6 @@ extern IP_LINK *ip_head;       //ip头指针变量
 
 //查找IP的函数，在ip_head所指向的链表
 extern IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff);
+extern IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip);
 
 #endif
