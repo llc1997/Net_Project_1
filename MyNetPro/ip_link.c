@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,18 +7,29 @@
 #include <fcntl.h>
 #include <string.h>
 #include <arpa/inet.h>
+=======
+//#include "ip_link.h"
+#include <stdlib.h>
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 
 //过滤链表结构体，可过滤ip/port/协议/
 typedef struct ip_link
 {
+<<<<<<< HEAD
     unsigned char f_dest_ip[4];    	//过滤目的Ip,4字节
     unsigned char f_src_ip[4];    	//过滤源Ip,4字节
     unsigned char f_port[2];			//过滤的port，2字节
     char f_agree[2];				//过滤的协议，2字节,协议代码
+=======
+    char filter_ip[4];    			//Ip的IP地址,4字节
+    unsigned short filter_port;		//过滤的port，2字节
+    char filter_agree[2];			//过滤的协议，2字节
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
     struct ip_link *front;			//链表的上一个节点
     struct ip_link *next;			//链表的下一个节点
 }IP_LINK;
 
+<<<<<<< HEAD
 IP_LINK *ip_head=NULL;		//过滤链表头节点
 
 IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew);
@@ -89,6 +101,15 @@ void init_ip_link(void)
 	//3、填充链表节点
 	//4、插入链表，带创建的插入
     //printf("init_ip_link初始化Ip链表\n");
+=======
+IP_LINK *ip_head=NULL;
+
+
+//ip初始化函数（主控）
+void init_ip_link(void)
+{
+    printf("init_ip_link初始化Ip链表\n");
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 #if 0
 	ip_head = (IP_LINK *)malloc(sizeof(IP_LINK));
 	//需读取文件，提取文件内容初始化
@@ -100,6 +121,7 @@ void init_ip_link(void)
 #endif
 }
 
+<<<<<<< HEAD
 //带创建的插入
 IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew)
 {
@@ -186,12 +208,34 @@ IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip)
 		ip_find = ip_find->next;		
 	}	
 	if(strncmp((char *)ip_find->f_dest_ip,(char *)recv_ip,4) == 0)
+=======
+//查找IP的函数，在ip_head所指向的链表
+IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff)
+{
+	return NULL;
+#if 0
+    IP_LINK *ip_find = ip_head;
+    char ip_src[5];
+    bzero(ip_src,sizeof(ip_src));
+    memcpy(ip_src, recv_buff, 4);//查找过滤ip，来源Ip
+    ip_src[7] = '\0';
+
+	if(ip_find == NULL)
+		return NULL;
+	while(ip_find->next != head){
+		if(strncmp(ip_find.filter_ip,ip_src,4) == 0)
+			return ip_find;
+		ip_find = ip_find->next;		
+	}	
+	if(strncmp(ip_find.filter_ip,ip_src,4) == 0)
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 		return ip_find;	
 	else
 		return ip_find;
 #endif 
 }
 
+<<<<<<< HEAD
 //ip过滤链表节点打印
 void ip_link_print(IP_LINK *ip_head)
 {
@@ -214,6 +258,8 @@ void ip_link_print(IP_LINK *ip_head)
 			pb->f_agree[0],pb->f_agree[1]);
 }
 
+=======
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 #if 0
 //删除IP链表节点（基本不用）
 IP_LINK *delete_ip(IP_LINK *ip_head,char ip_del[4])

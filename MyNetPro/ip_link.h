@@ -1,6 +1,7 @@
 #ifndef IP_LINK_H
 #define IP_LINK_H
 
+<<<<<<< HEAD
 //过滤链表结构体，可过滤ip/port/协议/
 typedef struct ip_link
 {
@@ -8,6 +9,18 @@ typedef struct ip_link
     unsigned char f_src_ip[4];    	//过滤目的Ip,4字节
     unsigned short f_port;			//过滤的port，2字节
     char f_agree[2];				//过滤的协议，2字节,协议代码
+=======
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+//过滤链表结构体，可过滤ip/port/协议/
+typedef struct ip_link
+{
+    char filter_ip[4];    			//Ip的IP地址,4字节
+    unsigned short filter_port;		//过滤的port，2字节
+    char filter_agree[2];			//过滤的协议，2字节
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
     struct ip_link *front;			//链表的上一个节点
     struct ip_link *next;			//链表的下一个节点
 }IP_LINK;
@@ -24,10 +37,14 @@ extern IP_LINK *ip_head;       //ip头指针变量
  extern IP_LINK *insert_ip_link(IP_LINK *insert_ip_head);   
 
 //查找IP的函数，在ip_head所指向的链表
+<<<<<<< HEAD
 //extern IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff);
 
 extern IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew);
 extern IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip);
 extern void ip_link_print(IP_LINK *ip_head);
+=======
+extern IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff);
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 
 #endif

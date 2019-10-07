@@ -1,6 +1,9 @@
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <stdio.h>
 #include <string.h>
+=======
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 
 typedef struct arp_link
 {
@@ -34,7 +37,11 @@ ARP_LINK *arp_link_insert(ARP_LINK *arp_head, ARP_LINK *pnew)
 	return arp_head;
 }
 
+<<<<<<< HEAD
 //arp链表节点打印
+=======
+//创建插入arp链表节点函数，不用有序
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 void arp_link_print(ARP_LINK *arp_head)
 {
 	ARP_LINK *pb = arp_head;
@@ -64,11 +71,19 @@ ARP_LINK* arp_link_seek(ARP_LINK *arp_head, unsigned char *recv_ip)
 		return NULL;
 	while(arp_find->next != arp_head)	//未到尾节点
 	{
+<<<<<<< HEAD
 		if(strncmp((char *)arp_find->arp_ip,(char *)recv_ip,4) == 0)
 			return arp_find;
 		arp_find = arp_find->next;
 	}
 	if(strncmp((char *)arp_find->arp_ip,(char *)recv_ip,4) == 0)
+=======
+		if(strncmp(arp_find->arp_ip,recv_ip,4) == 0)
+			return arp_find;
+		arp_find = arp_find->next;
+	}
+	if(strncmp(arp_find->arp_ip,recv_ip,4) == 0)
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 		return arp_find; 
 	else
 		return NULL;

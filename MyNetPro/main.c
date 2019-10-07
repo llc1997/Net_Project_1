@@ -28,7 +28,11 @@ int main(int argc, char *argv[])
 	}
 	if(pid > 0) //父进程，监视判断子进程运行状态
 	{
+<<<<<<< HEAD
 		//printf("父进程启动\n");
+=======
+		printf("父进程启动\n");
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 		while(1)
 		{
 			;//待完善（在线升级模块预留接口）
@@ -36,7 +40,11 @@ int main(int argc, char *argv[])
 	}
 	else if(pid == 0) //子进程，运行路由器代码
 	{
+<<<<<<< HEAD
 		//printf("子进程启动\n");
+=======
+		printf("子进程启动\n");
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 		main_child();
 	}
 	while(1);

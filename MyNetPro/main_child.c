@@ -1,7 +1,10 @@
 #include "main_child.h"
 
+<<<<<<< HEAD
 extern void init_route_link(void);
 
+=======
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 /******************************************************************
 函	数:	int main(int argc, char *argv[])
 功	能:	主函数
@@ -9,6 +12,7 @@ extern void init_route_link(void);
 返回值: 无
 *******************************************************************/
 int main_child(){
+<<<<<<< HEAD
 		//printf("main_child初始化Ip链表\n");
 	//初始化 配置文件
 // **********文件：ip_link************************
@@ -19,12 +23,22 @@ int main_child(){
 // **********文件：route_link************************
 	init_route_link();
 	route_link_print(route_head);
+=======
+	printf("main_child初始化Ip链表\n");
+	//初始化 配置文件
+// **********文件：ip_link************************
+	init_ip_link();
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 	
 	//获取接口信息
 	//getinterface()填充了数组：net_interface[MAXINTERFACES];接口数据结构体数组
 // **********文件：get_interface************************
 	getinterface();
+<<<<<<< HEAD
 	//printf("getinterface初始化接口数据\n");
+=======
+	printf("getinterface初始化接口数据\n");
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 	//创建键盘处理函数并脱离
 	pthread_t KEY_T;
 // **********文件：key_pthread************************
@@ -46,9 +60,13 @@ int main_child(){
 			perror("recvfrom");
 			continue;
 		}
+<<<<<<< HEAD
 		//ARP请求包未做处理
 		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[20]==0x02)){//ARP协议应答包
 			printf("接收到 ARP 应答包\n");
+=======
+		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)){//ARP协议应答包
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 			ARP_LINK *p = (ARP_LINK *)malloc(sizeof(ARP_LINK));//arp_link链表声明定义，申请一个节点的空间
 			if(p==NULL){
 				perror("malloc");
@@ -62,6 +80,7 @@ int main_child(){
 			pthread_create(&ARP_T, NULL,arp_pthread, (void*)p);		//创建ARP处理线程，将节点P存入缓存链表ip_link
 			pthread_detach(ARP_T);
 		}
+<<<<<<< HEAD
 		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[20]==0x01)){//ARP协议请求包
 			printf("接收到 ARP 请求包**\n");
 			RECV_DATA *recv = (RECV_DATA *)malloc(sizeof(RECV_DATA));
@@ -76,6 +95,11 @@ int main_child(){
 				//printf("接收到 IP 数据包&&\n");
 			//目的ip过滤
 			IP_LINK *ip_pb = find_iplink_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
+=======
+		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x00)){//IP协议包
+			//目的ip过滤
+			IP_LINK *ip_pb = find_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 // **********函数：find_ip************************
 			if(ip_pb!=NULL){
 				continue;

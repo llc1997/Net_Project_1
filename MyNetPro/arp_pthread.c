@@ -1,5 +1,6 @@
 #include "arp_pthread.h"
 #include "arp_link.h"
+<<<<<<< HEAD
 #include "ip_pthread.h"
 #include <pthread.h>
 #include <sys/ioctl.h>
@@ -18,12 +19,18 @@ int fun_interface(unsigned char* recv_ip);
 int fun_arp_reply(int interface,RECV_DATA* recv);
 
 void *arp_pthread(void *arg)  //传的是P指针
+=======
+#include <unistd.h>
+
+void *arp_pthread(void *arg)
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 {
 	//unsigned char recv_arp_ip[4];
 	//unsigned char recv_arp_mac[6];
 	ARP_LINK *ret_arp_seek = arp_link_seek(arp_head,((ARP_LINK *)arg)->arp_ip);
 	if(ret_arp_seek == NULL)		//没有对应的IP，直接插入arp表
 		arp_head = arp_link_insert(arp_head,(ARP_LINK *)arg);
+<<<<<<< HEAD
 	else if(strncmp((char *)ret_arp_seek->arp_mac,(char *)((ARP_LINK *)arg)->arp_mac,6) != 0)
 	{	//有对应的IP，且mac不一致
 		arp_head = arp_link_insert(arp_head,(ARP_LINK *)arg);
@@ -111,4 +118,11 @@ int fun_arp_reply(int interface,RECV_DATA* recv)
 	sendto(sockfd,recv->data,len_data,0,(struct sockaddr *)&sll,sizeof(sll));
 	close(sockfd);
 	return 0;
+=======
+	else if(strncmp(ret_arp_seek->arp_mac,((ARP_LINK *)arg)->arp_mac,6) != 0)
+	{	//有对应的IP，且mac不一致
+		arp_head = arp_link_insert(arp_head,(ARP_LINK *)arg);
+	}
+	//printf("ARP应答数据包处理线程,插入一个ARP节点\n");
+>>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 }
