@@ -13,16 +13,18 @@ int main_child(){
 	//初始化 配置文件
 // **********文件：ip_link************************
 	init_ip_link();
+	ip_link_print(ip_head);
 
 	//初始化路由表链表
 // **********文件：route_link************************
 	init_route_link();
+	route_link_print(route_head);
 	
 	//获取接口信息
 	//getinterface()填充了数组：net_interface[MAXINTERFACES];接口数据结构体数组
 // **********文件：get_interface************************
 	getinterface();
-	printf("getinterface初始化接口数据\n");
+	//printf("getinterface初始化接口数据\n");
 	//创建键盘处理函数并脱离
 	pthread_t KEY_T;
 // **********文件：key_pthread************************

@@ -1,10 +1,6 @@
 #ifndef IP_LINK_H
 #define IP_LINK_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-
 //过滤链表结构体，可过滤ip/port/协议/
 typedef struct ip_link
 {
@@ -28,7 +24,10 @@ extern IP_LINK *ip_head;       //ip头指针变量
  extern IP_LINK *insert_ip_link(IP_LINK *insert_ip_head);   
 
 //查找IP的函数，在ip_head所指向的链表
-extern IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff);
+//extern IP_LINK *find_ip(IP_LINK *ip_head, unsigned char * recv_buff);
+
+extern IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew);
 extern IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip);
+extern void ip_link_print(IP_LINK *ip_head);
 
 #endif

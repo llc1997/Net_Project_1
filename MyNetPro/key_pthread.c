@@ -1,4 +1,9 @@
-#include "key_pthread.h"
+#include <pthread.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 
 
@@ -19,17 +24,18 @@ char mygetch()
 //打印帮助提示信息
 void help(void)
 {
-    printf("========================\n");
-    printf("== 1、setip ============\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
+    printf("======================================\n");
+    printf("=== 如需设置路由器请输入对应的编号 ===\n");
+    printf("=== 1、set filter dest ip ============\n");
+    printf("=== 2、set filter src ip  ============\n");
+    printf("=== 3、set filter port    ============\n");
+    printf("=== 4、set filter agree   ============\n");
+    printf("======================================\n");
 }
 
 void *key_pthread(void *arg)
 {
-    printf("创建键盘处理函数并脱离\n");
+    //printf("创建键盘处理函数并脱离\n");
     help();
     while (1)
     {
@@ -37,12 +43,32 @@ void *key_pthread(void *arg)
         switch (option)
         {
         case '1':printf("选择了操作1\n");
+            char dest_ip[16];
+            printf("请输入需要过滤的目的ip：");
+            scanf("%s",dest_ip);
+            break;
+        case '2':printf("选择了操作2\n");
+            break;
+        case '3':printf("选择了操作3\n");
+            break;
+        case '4':printf("选择了操作4\n");
+            break;
+        case '5':printf("选择了操作5\n");
             break;
         default:
             break;
         }
     }
 }
+
+//写入文件中
+void fun()
+{
+
+}
+
+//
+
 
 
 

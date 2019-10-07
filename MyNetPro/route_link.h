@@ -13,5 +13,6 @@ typedef struct route_link
 
 extern ROUTE_LINK *route_head;          //路由表头指针变量
 extern void init_route_link(void);       //路由表链表初始化
+extern void route_link_print(ROUTE_LINK *route_head);
 
 #endif

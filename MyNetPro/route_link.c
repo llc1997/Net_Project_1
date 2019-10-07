@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 //路由表结构体
 typedef struct route_link
@@ -31,25 +32,30 @@ void init_route_link(void)
 	//切割文件内容，切割一行为单位
 	conf_len = conf_deal(conf_buf,conf_line,"\r\n");
 	//循环处理每一行
-	printf("conf_len=%d\n",conf_len);
+	//printf("conf_len=%d\n",conf_len);
 	for(k=0;k<conf_len;k++)
 	{
 		//if(conf_line[k] == NULL)
 		//	break;
 		//str_temp = conf_line[k];
 		//i=0; j=0;
-		char *route_row[4] = {NULL,NULL,NULL,NULL};
+		char *route_row[3] = {NULL,NULL,NULL};
 		//切割列，“,+”为单位
-		conf_deal(conf_buf,conf_line,",+");
+		//printf("列切割前：%s\n",conf_line[k]);
+		conf_deal(conf_line[k],route_row,",+");
+		//printf("列切割后：%s，%s，%s，%s\n",route_row[0],route_row[1],route_row[2],route_row[3]);
 		route_new = (ROUTE_LINK *)malloc(sizeof(ROUTE_LINK));
 		bzero(route_new,sizeof(ROUTE_LINK));
 		//对每一列的内容保存入链表节点route_new
 		if(route_row[0] != NULL)
-			memcpy(route_new->network,route_row[0],4);	
+			inet_pton(AF_INET,route_row[0]+8,(void *)route_new->network);
+			//memcpy(route_new->network,route_row[0],4);	
 		if(route_row[1] != NULL)
-			memcpy(route_new->mask,route_row[1],4);
+			inet_pton(AF_INET,route_row[1]+5,(void *)route_new->mask);
+			//memcpy(route_new->mask,route_row[1],4);
 		if(route_row[2] != NULL)
-			memcpy(route_new->nexthop,route_row[2],2);
+			inet_pton(AF_INET,route_row[2]+8,(void *)route_new->nexthop);
+			//memcpy(route_new->nexthop,route_row[2],2);
 		//if(route_row[3] != NULL)
 		//	memcpy(route_new->f_agree,route_row[3],strlen(route_row[3]));
 		//插入链表
@@ -57,10 +63,11 @@ void init_route_link(void)
 	}
 }
 
+
 //带创建的插入
 ROUTE_LINK* route_link_insert(ROUTE_LINK* route_head, ROUTE_LINK* pnew)
 {
-	printf("*****route_link节点插入*******\n");
+	//printf("*****route_link节点插入*******\n");
 	if(route_head == NULL){ //链表为空
 		route_head = pnew;
 		route_head->next = route_head;
@@ -96,3 +103,22 @@ ROUTE_LINK *find_routelink_ip(ROUTE_LINK *route_head, unsigned char * recv_ip)
 		return ip_find;
 }
 
+//route路由表链表节点打印
+void route_link_print(ROUTE_LINK *route_head)
+{
+	ROUTE_LINK *pb = route_head;
+	if(route_head == NULL)
+		return;
+	printf("*****路由表*****\n");
+	while(pb->next != route_head){
+		printf("目的网段：%d.%d.%d.%d\n掩码：%d.%d.%d.%d\n下一跳IP：%d.%d.%d.%d\n",
+			pb->network[0], pb->network[1],pb->network[2],pb->network[3],
+			pb->mask[0],pb->mask[1],pb->mask[2],pb->mask[3],
+			pb->nexthop[0],pb->nexthop[1],pb->nexthop[2],pb->nexthop[3]);
+		pb = pb->next;		
+	}	
+	printf("目的网段：%d.%d.%d.%d\n掩码：%d.%d.%d.%d\n下一跳IP：%d.%d.%d.%d\n",
+			pb->network[0], pb->network[1],pb->network[2],pb->network[3],
+			pb->mask[0],pb->mask[1],pb->mask[2],pb->mask[3],
+			pb->nexthop[0],pb->nexthop[1],pb->nexthop[2],pb->nexthop[3]);
+}

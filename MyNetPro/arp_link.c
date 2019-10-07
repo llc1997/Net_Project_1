@@ -34,7 +34,7 @@ ARP_LINK *arp_link_insert(ARP_LINK *arp_head, ARP_LINK *pnew)
 	return arp_head;
 }
 
-//创建插入arp链表节点函数，不用有序
+//arp链表节点打印
 void arp_link_print(ARP_LINK *arp_head)
 {
 	ARP_LINK *pb = arp_head;
