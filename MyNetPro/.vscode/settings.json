@@ -5,15 +5,9 @@
         "get_interface.h": "c",
         "ip_pthread.h": "c",
         "ip_link.h": "c",
-<<<<<<< HEAD
         "key_pthread.h": "c",
         "IP_LINK.C": "cpp",
         "route_link.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
-=======
-        "key_pthread.h": "c"
-    },
-    "C_Cpp.errorSquiggles": "Enabled"
->>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 }

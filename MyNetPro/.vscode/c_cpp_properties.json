@@ -4,11 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-<<<<<<< HEAD
                 "${E:/UbuntuWindows/include}/***"
-=======
-                "${D:/include}/***"
->>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
             ],
             "defines": [
                 "_DEBUG",

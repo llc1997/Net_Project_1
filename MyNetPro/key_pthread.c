@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <pthread.h>
 #include <termios.h>
 #include <sys/types.h>
@@ -37,13 +36,6 @@ void help(void)
 void *key_pthread(void *arg)
 {
     //printf("创建键盘处理函数并脱离\n");
-=======
-#include "key_pthread.h"
-
-void *key_pthread(void *arg)
-{
-    printf("创建键盘处理函数并脱离\n");
->>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
     help();
     while (1)
     {
@@ -51,7 +43,6 @@ void *key_pthread(void *arg)
         switch (option)
         {
         case '1':printf("选择了操作1\n");
-<<<<<<< HEAD
             char dest_ip[16];
             printf("请输入需要过滤的目的ip：");
             scanf("%s",dest_ip);
@@ -63,8 +54,6 @@ void *key_pthread(void *arg)
         case '4':printf("选择了操作4\n");
             break;
         case '5':printf("选择了操作5\n");
-=======
->>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
             break;
         default:
             break;
@@ -72,7 +61,6 @@ void *key_pthread(void *arg)
     }
 }
 
-<<<<<<< HEAD
 //写入文件中
 void fun()
 {
@@ -85,30 +73,4 @@ void fun()
 
 
 
-=======
-//打印帮助提示信息
-void help(void)
-{
-    printf("========================\n");
-    printf("== 1、setip ============\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
-    printf("========================\n");
-}
-
-//函数功能:无回显输入字符
-char mygetch()
-{
-	struct termios oldt, newt;
-	char ch;
-	tcgetattr( STDIN_FILENO, &oldt );
-	newt = oldt;
-	newt.c_lflag &= ~( ICANON | ECHO );
-	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-	ch = getchar();
-	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-	return ch;
-}
->>>>>>> 5ef0503a1cde32bc6f28def86654aaa7e72b40ab
 
