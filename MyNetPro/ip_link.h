@@ -28,6 +28,8 @@ extern IP_LINK *ip_head;       //ip头指针变量
 
 extern IP_LINK* ip_link_insert(IP_LINK *ip_head, IP_LINK *pnew);
 extern IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip);
+extern IP_LINK *find_iplink_srcip(IP_LINK *ip_head, unsigned char * recv_ip);
 extern void ip_link_print(IP_LINK *ip_head);
+
 
 #endif

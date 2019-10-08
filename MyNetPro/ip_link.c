@@ -172,7 +172,7 @@ int conf_deal(char *conf_src,char *conf_done[],char *str)
 	return i;
 }
 
-//功能：查找过滤表IP的函数，在ip_head所指向的链表
+//功能：查找过滤表目的IP的函数，在ip_head所指向的链表
 IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip)
 {
 	//return NULL;
@@ -188,9 +188,30 @@ IP_LINK *find_iplink_ip(IP_LINK *ip_head, unsigned char * recv_ip)
 	if(strncmp((char *)ip_find->f_dest_ip,(char *)recv_ip,4) == 0)
 		return ip_find;	
 	else
-		return ip_find;
+		return NULL;
 #endif 
 }
+
+//功能：查找过滤表源IP的函数，在ip_head所指向的链表
+IP_LINK *find_iplink_srcip(IP_LINK *ip_head, unsigned char * recv_ip)
+{
+	//return NULL;
+#if 1
+    IP_LINK *ip_find = ip_head;
+	if(ip_find == NULL)
+		return NULL;
+	while(ip_find->next != ip_head){
+		if(strncmp((char *)ip_find->f_src_ip,(char *)recv_ip,4) == 0)
+			return ip_find;
+		ip_find = ip_find->next;		
+	}	
+	if(strncmp((char *)ip_find->f_src_ip,(char *)recv_ip,4) == 0)
+		return ip_find;	
+	else
+		return NULL;
+#endif 
+}
+
 
 //ip过滤链表节点打印
 void ip_link_print(IP_LINK *ip_head)

@@ -40,15 +40,26 @@ int main_child(){
 	char recv_buff[MY_RECV_SIZE_T]="";//原始套接字数据包大约为1500个字节
 	ssize_t recv_len=0;
 	while(1){
+		//sleep(1);
 		bzero(recv_buff,sizeof(recv_buff));
 		recv_len = recvfrom(raw_sock_fd, recv_buff, sizeof(recv_buff), 0, NULL, NULL);
 		if(recv_len<=0||recv_len>MY_RECV_SIZE_T){
 			perror("recvfrom");
 			continue;
 		}
-		//ARP请求包未做处理
-		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[20]==0x02)){//ARP协议应答包
-			printf("接收到 ARP 应答包\n");
+		//ARP协议应答包
+		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[21]==0x02)){
+		//if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)){//ARP协议应答包
+				//printf("接收到 ARP 应答包&&\n");
+			RECV_DATA *recv = (RECV_DATA *)malloc(sizeof(RECV_DATA));
+			recv->data_len = recv_len;		//填充结构体的成员data_len为接收数据的长度
+			memcpy(recv->data, recv_buff, recv_len);	//拷贝数据包到动态地址结构体中
+			pthread_t ARP_T;
+// **********文件：arp_pthread************************
+			pthread_create(&ARP_T, NULL,arp_pthread, (void *)recv);		//创建ARP处理线程，将节点P存入缓存链表ip_link
+			pthread_detach(ARP_T);
+			//arp_request_pthread(recv);
+#if 0
 			ARP_LINK *p = (ARP_LINK *)malloc(sizeof(ARP_LINK));//arp_link链表声明定义，申请一个节点的空间
 			if(p==NULL){
 				perror("malloc");
@@ -61,9 +72,11 @@ int main_child(){
 // **********文件：arp_pthread************************
 			pthread_create(&ARP_T, NULL,arp_pthread, (void*)p);		//创建ARP处理线程，将节点P存入缓存链表ip_link
 			pthread_detach(ARP_T);
+#endif
 		}
-		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[20]==0x01)){//ARP协议请求包
-			printf("接收到 ARP 请求包**\n");
+		//ARP协议请求包
+		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x06)&&(recv_buff[21]==0x01)){
+				//printf("接收到 ARP 请求包**\n");
 			RECV_DATA *recv = (RECV_DATA *)malloc(sizeof(RECV_DATA));
 			recv->data_len = recv_len;		//填充结构体的成员data_len为接收数据的长度
 			memcpy(recv->data, recv_buff, recv_len);	//拷贝数据包到动态地址结构体中
@@ -74,10 +87,13 @@ int main_child(){
 		}
 		if((recv_buff[12]==0x08)&&(recv_buff[13]==0x00)){//IP协议包
 				//printf("接收到 IP 数据包&&\n");
-			//目的ip过滤
-			IP_LINK *ip_pb = find_iplink_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
-// **********函数：find_ip************************
-			if(ip_pb!=NULL){
+			//目的ip过滤和源ip过滤
+			IP_LINK *ip_pb1 = find_iplink_ip(ip_head, (unsigned char*)recv_buff+30); //find_ip查找过滤链表，找到不发，进入下一次
+			if(ip_pb1!=NULL){
+				continue;
+			}
+			IP_LINK *ip_pb2 = find_iplink_srcip(ip_head, (unsigned char*)recv_buff+26); //find_ip查找过滤链表，找到不发，进入下一次
+			if(ip_pb2!=NULL){
 				continue;
 			}
 			RECV_DATA *recv = (RECV_DATA *)malloc(sizeof(RECV_DATA));	//申请地址，缓存数据包RECV_DATA（结构体）
@@ -85,11 +101,9 @@ int main_child(){
 			memcpy(recv->data, recv_buff, recv_len);	//拷贝数据包到动态地址结构体中
 			//创建转发数据包处理线程
 			pthread_t IP_T;
-// **********文件：ip_pthread************************
 			pthread_create(&IP_T, NULL,ip_pthread, (void*)recv);	//IP数据包转发线程
 			pthread_detach(IP_T);
 		}
 	}
-	
 	return 0;
 }

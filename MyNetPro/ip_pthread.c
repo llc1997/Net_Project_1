@@ -20,6 +20,23 @@ typedef struct recv_data
     char data[2048];    //数据内容，需修改优化
 }RECV_DATA;
 
+unsigned short checksum(unsigned short *buf, int len)
+{
+	int nword = len/2;
+	unsigned long sum;
+
+	if(len%2 == 1)
+		nword++;
+	for(sum = 0; nword > 0; nword--)
+	{
+		sum += *buf;
+		buf++;
+	}
+	sum = (sum>>16) + (sum&0xffff);
+	sum += (sum>>16);
+	return ~sum;
+}
+
 //功能：接口查询函数，
 //参数：unsigned char* recv：数据包的IP起始地址
 //返回值：找到返回网口数组的下标，-1为未找到
@@ -122,7 +139,12 @@ int fun_arp_send(unsigned char *recv_ip,int interface)
 	memcpy(&arp_send_buf[22],net_interface[interface].mac,6);
 	memcpy(&arp_send_buf[28],net_interface[interface].ip,4);
 	memcpy(&arp_send_buf[38],recv_ip,4);
-	sendto(sockfd,arp_send_buf,len,0,(struct sockaddr *)&sll,sizeof(sll));
+	int ret_send = sendto(sockfd,arp_send_buf,len,0,(struct sockaddr *)&sll,sizeof(sll));
+	if(ret_send != len)
+	{
+		
+	}
+	//printf("ARP：ret_send=%d,len=%d\n",ret_send,len);
 	close(sockfd);
 	return 0;
 }
@@ -156,7 +178,24 @@ int fun_data_send(int interface,RECV_DATA* recv, unsigned char *arp_mac)
 	sll.sll_ifindex = ethreq.ifr_ifindex;
 		//printf("报文处理开始\n");
 	memcpy(recv->data,arp_mac,6);
-	sendto(sockfd,recv->data,len_data,0,(struct sockaddr *)&sll,sizeof(sll));
+	//memcpy(recv->data,arp_mac,6);
+	int ret_send=0;
+#if 0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	recv->data[22]--;
+	printf("TTL:%d\n",recv->data[22]);
+	if(recv->data[22] <= 0)
+	{
+		return 0;
+	}
+	*((unsigned short *)&(recv->data[24]))=0;
+	*((unsigned short *)&(recv->data[24])) = checksum((unsigned short *)((recv->data)+14),20);
+#endif
+	ret_send = sendto(sockfd,recv->data,len_data,0,(struct sockaddr *)&sll,sizeof(sll));
+	if(ret_send != len_data)
+	{
+		
+	}
+	//printf("data：ret_send=%d,len=%d\n",ret_send,len_data);
 	close(sockfd);
 	return 0;
 }
@@ -187,19 +226,37 @@ ROUTE_LINK* fun_insert_route(unsigned char * recv_ip)
 
 void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 {
-    	printf("IP数据包处理函数\n");
+    	//printf("\nIP数据包处理函数\n");
 	unsigned char recv_ip[5];	//提取目的IP
+	unsigned char src_ip[5];
 	if (((RECV_DATA *)recv)->data[13]==0x00)  //IP数据包
 	{
 		memcpy(recv_ip, ((RECV_DATA *)recv)->data+30, 4);
+		memcpy(src_ip, ((RECV_DATA *)recv)->data+26, 4);
 		recv_ip[4]='\0';
+		src_ip[4]='\0';
 	}
 	else if(((RECV_DATA *)recv)->data[13]==0x06) //ARP请求协议包
 	{
+		//printf("ARP数据包转发！\n");
 		memcpy(recv_ip, ((RECV_DATA *)recv)->data+38, 4);
+		memcpy(src_ip, ((RECV_DATA *)recv)->data+28, 4);
 		recv_ip[4]='\0';
+		src_ip[4]='\0';
 	}
-		//printf("进入线程，目的IP：%02x.%02x.%02x.%02x\n",recv_ip[0],recv_ip[1],recv_ip[2],recv_ip[3]);
+
+	//判断是否是本机发送
+	
+	int i;
+	int interface = get_interface_num();  //获取接口数量
+	for(i=0;i<interface;i++)
+	{
+		if(strncmp((char *)((net_interface[i]).ip), (char *)recv_ip, 4) ==0)
+		{
+			return NULL;
+		}
+	}
+		//printf("\n进入线程，目的IP：%d.%d.%d.%d\n",recv_ip[0],recv_ip[1],recv_ip[2],recv_ip[3]);
 	//1、判断活跃网卡???
 	int ret_interface =  fun_interface(recv_ip); //返回的值是网口数组的下标，-1为未找到
 		//printf("ret_interface=%d $$$$\n",ret_interface);
@@ -232,7 +289,7 @@ void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 	{
 		return NULL;	//是广播，退出线程
 	}
-		printf("***********************\n");
+		//printf("***********************\n");
 	//3、判断是否为回环地址
 	int ret_loopback = fun_loopback(recv_ip,ret_interface);	//1为回环，0为非回环
 		//printf("ret_loopback=%d *************\n",ret_loopback);
@@ -240,10 +297,13 @@ void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 	{
 		return NULL;	//是回环，退出线程
 	}
-		//printf("&&&&&&&&&&&&&&&&&&&&&&&&\n");
-		printf("\n目的IP：%d.%d.%d.%d\n",recv_ip[0],recv_ip[1],recv_ip[2],recv_ip[3]);
+		//printf("\n&&&&&&&&&&&&&&&&&&&&&&&&\n");
+		printf("IP转发线程，目的IP：%d.%d.%d.%d源ip：%d.%d.%d.%d\n",
+			recv_ip[0],recv_ip[1],recv_ip[2],recv_ip[3],
+			src_ip[0],src_ip[1],src_ip[2],src_ip[3]);
 	//4、查找arp链表
 	int num_arp_requst = 0;  //arp请求第几次？
+	//arp_link_print(arp_head);
 	while(1)
 	{
 		ARP_LINK *ret_arp_link = arp_link_seek(arp_head,(unsigned char *)recv_ip);	//查询ARP链表，看能否找到IP
@@ -253,13 +313,14 @@ void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 		{
 			//5、发送arp请求包
 				//发送arp请求包，四次，延时时间，在判断是否arp中有
-			fun_arp_send(recv_ip,ret_interface);
-			fun_arp_send(recv_ip,ret_interface);
+			//fun_arp_send(recv_ip,ret_interface);
+			//fun_arp_send(recv_ip,ret_interface);
 			fun_arp_send(recv_ip,ret_interface);
 			if(fun_arp_send(recv_ip,ret_interface))
 				continue;	//发送失败不计数，进入下一次发送
-			printf("发送arp请求*************************\n");
+			//printf("发送arp请求*************************\n");
 			num_arp_requst++;
+			sleep(1);
 		}
 		else if(ret_arp_link != NULL)
 		{
@@ -269,19 +330,25 @@ void *ip_pthread(void *recv)//参数为接收到的数组包结构体
 			//	ret_arp_link->arp_ip[0],ret_arp_link->arp_ip[1],
 			//	ret_arp_link->arp_ip[2],ret_arp_link->arp_ip[3]);
 			//arp_link_print(arp_head);
+			if(memcmp(((RECV_DATA*)recv)->data+6,net_interface[interface].mac,6) == 0)
+				break;
+			memcpy(((RECV_DATA*)recv)->data+6,net_interface[interface].mac,6);
 			if(fun_data_send(ret_interface,(RECV_DATA*)recv,(unsigned char *)(ret_arp_link->arp_mac)))
 			{
 				printf("data发送失败，本次数据未转发！\n");
 				continue;
+			}
+			else{
+				//printf("data发送成功，本次数据转发结束******！\n");
 			}
 			break;
 		}else{
 			printf("arp请求失败，本次数据未转发！\n");	
 			break;
 		}
-		sleep(1);
+		//printf()
 	}
+	//printf("线程退出\n");
 	return NULL;
-	//}
 }
 
