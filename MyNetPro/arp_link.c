@@ -40,7 +40,7 @@ void arp_link_print(ARP_LINK *arp_head)
 	ARP_LINK *pb = arp_head;
 	if(arp_head == NULL)
 		return;
-	printf("ip\t\tmac\n");
+	printf("****ARP表****\nip\t\tmac\n");
 	while(pb->next != arp_head){
 		printf("%d.%d.%d.%d\t%02x.%02x.%02x.%02x.%02x.%02x\n",
 			pb->arp_ip[0],pb->arp_ip[1],pb->arp_ip[2],pb->arp_ip[3],
@@ -73,10 +73,5 @@ ARP_LINK* arp_link_seek(ARP_LINK *arp_head, unsigned char *recv_ip)
 	else
 		return NULL;
 }
-
-
-
-
-
 
 
